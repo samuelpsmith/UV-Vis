@@ -10,6 +10,9 @@ To use, you must:
 python pip install pandas numpy scipy
 ```
 
+3. Download script and navigate script location in terminal.
+
+
 3. Run script
 ```
 python correct_plot_extinct.py
