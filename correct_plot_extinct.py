@@ -63,10 +63,10 @@ def baseline_als(y, lam=1e6, p=0.01, niter=10): # should remove magic numbers.
     return z
 
 
-def find_molarity(grams, molar_mass, volume_ml):
+def find_molarity(mass_g, molar_mass, volume_ml):
     # Calculate molarity
     volume_l = volume_ml / 1000.0
-    molarity = round(((grams / molar_mass) / volume_l), 6)
+    molarity = round(((mass_g / molar_mass) / volume_l), 6)
     return molarity
 
 
@@ -134,7 +134,6 @@ def main():
             x_default = config.get("x_default")
             percent_of_max = config.get("percent_of_max")
             constant_C = config.get("constant_C")
-            grams = config.get("grams")
             molar_mass = config.get("molar_mass")
             baseline_correct = config.get("baseline_correct")
             low_bound = config.get("low_bound")
@@ -156,15 +155,23 @@ def main():
 
         for filename in csv_files:
             print(f"Processing {filename}...")
-            volume_match = re.search(r"-(\d+)ml.", filename)
+            volume_match = re.search(r"-?(\d+)ml", filename)
+            mass_match = re.search(r'(-?\d+\.\d+)g', filename)
+
 
             if volume_match:
                 volume_ml = int(volume_match.group(1))
             else:
                 print(f"Volume not found in filename {filename}. Skipping...")
                 continue
+            
+            if mass_match:
+                mass_g = float(mass_match.group(1))
+            else:
+                print(f"Mass not found in filename {filename}. Skipping...")
+                continue
 
-            molarity = find_molarity(grams, molar_mass, volume_ml)
+            molarity = find_molarity(mass_g, molar_mass, volume_ml)
             corrected_data = load_and_plot_data(
                 filename, molarity, volume_ml, baseline_correct, low_bound
             )

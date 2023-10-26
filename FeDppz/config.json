@@ -3,7 +3,6 @@
     "x_default": 5,
     "percent_of_max": 0.03,
     "constant_C": 0.01,
-    "grams": 0.0002,
     "molar_mass": 532.3023,
     "baseline_correct":true,
     "low_bound": 300
