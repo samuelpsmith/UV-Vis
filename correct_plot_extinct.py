@@ -7,11 +7,30 @@ from sklearn.linear_model import LinearRegression
 import glob
 from collections import Counter
 import os
-import json
+import json 
+from tkinter import filedialog
+from tkinter import *
 
 # Load the JSON file
 dir_name = "FeDppz"
-config_filename = f"{dir_name}/data.json"
+config_filename = f"{dir_name}/config.json"
+
+def select_directory():
+    root = Tk()
+    root.withdraw()  # Hide the main window
+
+    # Show a directory selection dialog
+    selected_directory = filedialog.askdirectory(title="Select a Directory")
+
+    return selected_directory
+
+def validate_csv_files_exist(directory):
+    # Validate if the CSV files exist
+    csv_files = glob.glob(f"{directory}/*.csv")
+    if not csv_files:
+        return "No CSV files found in the selected directory. Validation failed."
+    else:
+        return "Validation passed."
 
 
 def load_config(filename):
@@ -24,7 +43,7 @@ def load_config(filename):
         return None
 
 
-def baseline_als(y, lam=1e6, p=0.01, niter=10):
+def baseline_als(y, lam=1e6, p=0.01, niter=10): # should remove magic numbers. 
     """
     Asymmetric Least Squares baseline correction algorithm
     Parameters:
@@ -56,7 +75,7 @@ def load_and_plot_data(filename, molarity, volume_ml, baseline_correct, low_boun
     df = pd.read_csv(filename, skiprows=1)
     avg_data = df.mean()
 
-    # Truncate data to remove wavelengths below 275 nm
+    # Truncate data to remove wavelengths below low_bound nm (e.g. 300nm)
     truncated_data = avg_data[avg_data.index.astype(float) >= low_bound]
 
     # Apply ALS baseline correction if baseline_correct is True
@@ -96,6 +115,18 @@ def find_maxima(avg_data, percent_of_max):
 
 def main():
     try:
+
+        # Ask the user to select a directory
+        selected_dir = select_directory()
+        print(f"Selected directory: {selected_dir}")
+        
+        if not selected_dir:
+            print("No directory selected. Exiting.")
+        else:
+            validation_result = validate_csv_files_exist(selected_dir)
+            print(validation_result)
+
+        config_filename = f"{selected_dir}/config.json"    
         config = load_config(config_filename)
 
         if config:
