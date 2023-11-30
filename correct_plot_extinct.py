@@ -12,8 +12,8 @@ from tkinter import filedialog
 from tkinter import *
 
 # Load the JSON file
-dir_name = "FeDppz"
-config_filename = f"{dir_name}/config.json"
+#selected_dir = "FeDppz"
+#config_filename = f"{selected_dir}/config.json"
 
 def select_directory():
     root = Tk()
@@ -24,9 +24,9 @@ def select_directory():
 
     return selected_directory
 
-def validate_csv_files_exist(directory):
+def validate_csv_files_exist(selected_dir):
     # Validate if the CSV files exist
-    csv_files = glob.glob(f"{directory}/*.csv")
+    csv_files = glob.glob(f"{selected_dir}/*.csv") + glob.glob(f"{selected_dir}/*.CSV")
     if not csv_files:
         return "No CSV files found in the selected directory. Validation failed."
     else:
@@ -140,11 +140,7 @@ def main():
 
         maxima_data = []
 
-        # Check the operating system 'nt' represents Windows, the case insensitive operating system.
-        if os.name == "nt":
-            csv_files = glob.glob(f"{dir_name}/*.csv")
-        else:
-            csv_files = glob.glob(f"{dir_name}/*.csv") + glob.glob(f"{dir_name}/*.CSV")
+        csv_files = glob.glob(f"{selected_dir}/*.csv") + glob.glob(f"{selected_dir}/*.CSV")
 
 
         if not csv_files:
