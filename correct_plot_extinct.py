@@ -139,13 +139,13 @@ def main():
             low_bound = config.get("low_bound")
 
         maxima_data = []
-        # Check the operating system
-        if (
-            os.name == "nt" or os.uname().sysname == "Darwin"
-        ):  # 'nt' represents Windows, 'Darwin' represents macOS
+
+        # Check the operating system 'nt' represents Windows, the case insensitive operating system.
+        if os.name == "nt":
             csv_files = glob.glob(f"{dir_name}/*.csv")
         else:
             csv_files = glob.glob(f"{dir_name}/*.csv") + glob.glob(f"{dir_name}/*.CSV")
+
 
         if not csv_files:
             print("No CSV files found. Exiting.")
