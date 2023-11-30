@@ -8,7 +8,7 @@ To use, you must:
 2. Install the dependencies:
 
 ```
-python pip install pandas numpy scipy
+python pip install pandas numpy scipy scikit-learn
 ```
 3. Make sure that all files are in a directory with names containing volumes and masses. Format config.json file with relevant information.
    
