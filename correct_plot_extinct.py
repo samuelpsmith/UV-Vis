@@ -6,14 +6,10 @@ from scipy.signal import find_peaks
 from sklearn.linear_model import LinearRegression
 import glob
 from collections import Counter
-import os
-import json 
+import json
 from tkinter import filedialog
 from tkinter import *
 
-# Load the JSON file
-#selected_dir = "FeDppz"
-#config_filename = f"{selected_dir}/config.json"
 
 def select_directory():
     root = Tk()
@@ -23,6 +19,7 @@ def select_directory():
     selected_directory = filedialog.askdirectory(title="Select a Directory")
 
     return selected_directory
+
 
 def validate_csv_files_exist(selected_dir):
     # Validate if the CSV files exist
@@ -43,7 +40,7 @@ def load_config(filename):
         return None
 
 
-def baseline_als(y, lam=1e6, p=0.01, niter=10): # should remove magic numbers. 
+def baseline_als(y, lam=1e6, p=0.01, niter=10):  # should remove magic numbers.
     """
     Asymmetric Least Squares baseline correction algorithm
     Parameters:
@@ -115,18 +112,17 @@ def find_maxima(avg_data, percent_of_max):
 
 def main():
     try:
-
         # Ask the user to select a directory
         selected_dir = select_directory()
         print(f"Selected directory: {selected_dir}")
-        
+
         if not selected_dir:
             print("No directory selected. Exiting.")
         else:
             validation_result = validate_csv_files_exist(selected_dir)
             print(validation_result)
 
-        config_filename = f"{selected_dir}/config.json"    
+        config_filename = f"{selected_dir}/config.json"
         config = load_config(config_filename)
 
         if config:
@@ -140,8 +136,9 @@ def main():
 
         maxima_data = []
 
-        csv_files = glob.glob(f"{selected_dir}/*.csv") + glob.glob(f"{selected_dir}/*.CSV")
-
+        csv_files = glob.glob(f"{selected_dir}/*.csv") + glob.glob(
+            f"{selected_dir}/*.CSV"
+        )
 
         if not csv_files:
             print("No CSV files found. Exiting.")
@@ -152,15 +149,14 @@ def main():
         for filename in csv_files:
             print(f"Processing {filename}...")
             volume_match = re.search(r"-?(\d+)ml", filename)
-            mass_match = re.search(r'(-?\d+\.\d+)g', filename)
-
+            mass_match = re.search(r"(-?\d+\.\d+)g", filename)
 
             if volume_match:
                 volume_ml = int(volume_match.group(1))
             else:
                 print(f"Volume not found in filename {filename}. Skipping...")
                 continue
-            
+
             if mass_match:
                 mass_g = float(mass_match.group(1))
             else:
